@@ -12,6 +12,9 @@ public class Event {
     private Person user;
     private int numGuests;
     private int index=0;
+
+
+
     private Service foodService ;
     private String location ;
 
@@ -39,6 +42,7 @@ public class Event {
         index++;
 
     }
+
 
     // Getter methods
     public String getEventName() {
@@ -122,6 +126,30 @@ public class Event {
     public void setEntertainmentService(Service entertainmentService) {
         this.entertainmentService = entertainmentService;
     }
+
+    public int eventCost(int locationCost) {
+      int cost=locationCost;
+        if(getFoodService()!=null){
+            cost+=getFoodService().getCost();
+        }
+        if(getPhotographerService()!=null){
+            cost+=getPhotographerService().getCost();
+        }
+        if(getEntertainmentService()!=null){
+            cost+=getEntertainmentService().getCost();
+        }
+        if(getDecorService()!=null){
+            cost+=getDecorService().getCost();
+        }
+        if(getPack()!=null){
+            cost+= (int) getPack().getTotalPrice();
+
+        }
+        this.overallCost=cost;
+         return cost;
+    }
+
+
 
     public int getIndex() {
         return index;

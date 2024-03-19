@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+
 public class MyAppT {
 public static int num=0;
      private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -47,6 +48,14 @@ public static int num=0;
     private boolean editPackageFlag;
 
 
+    public Event getLocalEvent() {
+        return localEvent;
+    }
+
+    public void setLocalEvent(Event localEvent) {
+        this.localEvent = localEvent;
+    }
+
     public MyAppT() {
 
 
@@ -64,7 +73,9 @@ public static int num=0;
         addEvent(e1);
         addEvent(e2);
         Time t = new Time(8, 0, 0);
-        java.util.Date d = new java.util.Date(2024, 2, 29);
+       d = new Date(2024, 2, 29);
+
+
         Event localEvent = new Event("asmaa", d, t, "home", "frozen", 25);
         addEvent(localEvent);
         Person u4 = new Person("ahmad", "1234", "7\3\2004", "0594507933","raghadsalhab13@gmail.com");
@@ -182,8 +193,17 @@ locationList.add(k2);
     private List<ServiceProvider> providerList = new ArrayList<>();
 
     private List<Event> eventList = new ArrayList<>();
+
+    public List<Event> getEventList() {
+        return eventList;
+    }
+
     private List<Package> packageList = new ArrayList<>();
     private List<Location>locationList=new ArrayList<>();
+
+    public List<Location> getLocationList() {
+        return locationList;
+    }
 
     public void addUser(Person user) {
         up.add(user);
@@ -402,9 +422,13 @@ locationList.add(k2);
 
     public void createEventWithBasicInfo(String s, String string, Integer int4, Integer int5, Integer int6, Integer int1, Integer int2, Integer int3, String string2, String string3, Integer int7) {
         Person n = searchInUser(s);
-        Date d = new Date(int4, int5, int6);
+   Date date=new Date(int4,int5,int6);
         Time t = new Time(int1, int2, int3);
-        int temp = 0;
+
+
+int temp=0;
+
+
         for (Event e : eventList) {
             if (e.getDate().equals(d) && e.getTime().equals(t) && e.getLocation().equals(string2)) {
                 localEventFlag = false;
@@ -414,11 +438,16 @@ locationList.add(k2);
 
         }
         if (temp == 0) {
-            localEvent = new Event(string, d, t, string2, string3, int7);
+            localEvent = new Event(string, date, t, string2, string3, int7);
             localEvent.setUser(n);
+            n.getEventList().add(localEvent);
+            eventList.add(localEvent);
             System.out.println("out");
             localEventFlag = true;
+
         }
+
+
     }
 
     public boolean isLocalEventFlag() {
@@ -495,6 +524,9 @@ locationList.add(k2);
                 serviceMenuFlag = false;
         }
     }
+    public void addLocalEventToEventList() {
+        eventList.add(localEvent);
+    }
 
     public void isMenuServiceFlag() {
         serviceMenuFlag = false;
@@ -524,7 +556,7 @@ locationList.add(k2);
         return isEnterService;
     }
 
-    public void addFoodService(Integer int1, String str) {
+    public int addFoodService(Integer int1, String str) {
 
 
         for (ServiceProvider sp : providerList) {
@@ -558,14 +590,18 @@ locationList.add(k2);
                                 case "Photographer":
                                     localEvent.setPhotographerService(s);
                                     addLocalEventPhotoFlag = true;
+
                                     break;
                             }
+                            return s.getCost();
 
                         }
 
                 }
             }
+
         }
+      return 0;
     }
 
     public boolean isAddLocalEventFoodFlag() {
@@ -584,13 +620,15 @@ locationList.add(k2);
         return addLocalEventPhotoFlag;
     }
 
-    public void addPackageToEvent(Integer int1) {
+    public boolean addPackageToEvent(Integer int1) {
         for (Package p : packageList) {
             if (p.getNumber() == int1) {
                 localEvent.setPack(p);
                 addPackageFlag = true;
+                return true;
             }
         }
+        return false;
     }
 
     public boolean isAddPackageFlag() {
@@ -636,6 +674,19 @@ locationList.add(k2);
         return null;
     }
 
+
+    public String searchInSpAccordingToType(String string) {
+        String s="Service providers:\n";
+        for (ServiceProvider p : providerList) {
+            if (p.getServiceType().equals(string)) {
+              s+=p.getPerson().getUserName()+"\t"+p.getPerson().getPhoneNum()+"\n";
+            }
+        }
+        return s;
+    }
+
+
+
     public ServiceProvider searchInServiceProvider(String string) {
         for (ServiceProvider p : providerList) {
             if (p.getPerson().getUserName().equals(string)) {
@@ -650,6 +701,12 @@ locationList.add(k2);
         userhasevent = !(pp.getEventList().isEmpty());
     }
 
+
+
+
+
+
+
     public boolean isUserhasevent() {
         return userhasevent;
     }
@@ -662,6 +719,28 @@ locationList.add(k2);
         }
         return null;
     }
+
+    public Event searchInEventByName(String str) {
+        for (Event e : eventList) {
+            if (e.getEventName().equals(str)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
+
+
+    public Location searchInLocation(Integer int1) {
+        for (Location e : locationList) {
+            if (e.getId() == int1) {
+                 return e;
+            }
+        }
+        return null;
+    }
+
+
 
     public void serchforevent(Integer int1) {
 
@@ -764,6 +843,9 @@ locationList.add(k2);
 
 
     }
+
+
+
 
     public boolean isEditServiceForSpFlag() {
         return editServiceForSpFlag;
@@ -1056,8 +1138,24 @@ locationList.add(k2);
 
     public void editEventNameByUser(String string, String string2, String string3) {
         Person p=searchInUser(string);
+
        Event e= p.searchInUserEvents(string2);
-       e.setEventName(string3);
+
+
+            for (Event o : p.getEventList()) {
+
+                    System.out.println("in side user event list "+o.getEventName()+"\n");
+
+            }
+
+
+
+
+       if(e==null){
+           System.out.println("its nullllll");
+       }
+       else{
+       e.setEventName(string3);}
         editEventNameByUserFlag=true;
 
     }
@@ -1186,6 +1284,7 @@ locationList.add(k2);
         e.setPack(null);
         editDeletePackageFromEventByUserFlag=true;
         System.out.println(editDeletePackageFromEventByUserFlag);
+        logger.info("deleted successfully");
 
     }
 
@@ -1197,7 +1296,7 @@ locationList.add(k2);
         Person p=searchInUser(string);
         String format = "Event Name" + "\t" + "Theme" + "\t" + "Location" + "\t" + "Date" + "\t" + "Time" +"\t"+"Number of peaple"+ "\t"+"Decoration Service"+"\t"+"Entertainment Service"+"\t"+"Food Service"+"\t"+"Photographer Service"+"\n";
         for (Event e : p.getEventList()) {
-            format += e.getEventName() + "\t" + e.getTheme() + "\t" + e.getLocation() + "\t" + e.getDate() + "\t" + e.getTime()+"\t"+e.getNumGuests()+"\t";
+            format += e.getEventName() + "\t" + e.getTheme() + "\t" + e.getLocation() + "\t" + e.getDate().getYear()+"\\"+ e.getDate().getMonth() +"\\"+ e.getDate().getDate()+ "\t" + e.getTime()+"\t"+e.getNumGuests()+"\t";
             if(!(e.getDecorService()==null)){
                format+=e.getDecorService().getDiscription();
             }
@@ -1221,6 +1320,9 @@ locationList.add(k2);
             if(!(e.getPhotographerService()==null)){
                 format+=e.getPhotographerService().getDiscription();
 
+            }
+            if(!(e.getPack()==null)){
+                format+=e.getPack().getNumber()+"    "+e.getPack().getDescription();
             }
             else{
                 format+="\t\t";
@@ -1266,7 +1368,7 @@ locationList.add(k2);
         for(Location l:locationList)
         {
             if (l.getId()==int1) {
-                e.setLocation(l.getDescription());
+                e.setLocation(l.getLocationName());
                 editLocationFlag=true;
             }
         }
@@ -1345,6 +1447,16 @@ locationList.add(k2);
         }
     }
 
+    public Package searchInPackage(int packId) {
+        for(Package j :packageList)
+        {
+            if (j.getNumber()==packId) {
+              return j;
+                       }
+
+        }
+        return null;
+    }
 }
 
 

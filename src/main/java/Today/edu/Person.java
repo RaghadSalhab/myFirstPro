@@ -68,6 +68,7 @@ public class Person
     public Event searchInUserEvents(String e1){
         for (Event e:eventList){
             if(e.getEventName().equals(e1)){
+
                 return e;
             }
         }

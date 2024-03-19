@@ -179,7 +179,7 @@ public class CreateEvent {
 
     @When("the user selects  {int} package")
     public void the_user_selects_package(Integer int1) {
-        obj.addPackageToEvent(int1);
+        boolean b=obj.addPackageToEvent(int1);
     }
 
 
